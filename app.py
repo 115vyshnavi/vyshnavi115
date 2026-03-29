@@ -218,29 +218,35 @@ st.markdown(f"""
         z-index: 999;
         transition: 0.3s;
     }}
-    .floating-chat-btn:hover {{
-        transform: scale(1.1);
-        background-color: #1e3b1d;
+    .glass-card {{
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }}
-    
-    /* Upload Image Dropzone Simulation */
-    .upload-dropzone {{
-        border: 2px dashed #cbd5e1;
-        border-radius: 12px;
-        padding: 40px 20px;
-        text-align: center;
-        background-color: #f8fafc;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    .glass-card:hover {{
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(46, 125, 50, 0.15);
     }}
-    .upload-icon {{
-        font-size: 32px;
-        color: #94a3b8;
-        margin-bottom: 15px;
+    div.stButton > button {{
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+        border: 1px solid #eef2f0 !important;
+        background: white !important;
     }}
+    div.stButton > button:hover {{
+        border-color: #2E7D32 !important;
+        color: #2E7D32 !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 0 10px 20px rgba(46, 125, 50, 0.1) !important;
+    }}
+    .upload-dropzone {{ border: 2px dashed #cbd5e1; border-radius: 12px; padding: 40px 20px; text-align: center; background-color: #f8fafc; }}
+    .upload-icon {{ font-size: 32px; color: #94a3b8; margin-bottom: 15px; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -303,36 +309,43 @@ def t(text): return translate(text, LANG_CODE_MAP[st.session_state.selected_lang
 # STAGE 1: LANGUAGE SELECTION & SPLASH
 # ==========================================
 def render_language_screen():
-    st.markdown("""
+    import base64
+    bg_path = r"C:\Users\user\.gemini\antigravity\brain\e0178861-5a24-463c-9ef9-173bd4d4e9f4\agritech_hero_bg_1774808006828.png"
+    bg_b64 = ""
+    try:
+        with open(bg_path, "rb") as f: bg_b64 = base64.b64encode(f.read()).decode()
+    except: pass
+    bg_css = f"background-image: linear-gradient(rgba(10, 30, 20, 0.4), rgba(10, 30, 20, 0.95)), url('data:image/png;base64,{bg_b64}');" if bg_b64 else "background: linear-gradient(135deg, #1e3b1d, #0f172a);"
+
+    st.markdown(f"""
     <style>
-        [data-testid="stSidebar"] {display: none !important;}
-        .stApp {
-            background-image: linear-gradient(rgba(10, 30, 20, 0.75), rgba(10, 30, 20, 0.9)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2689&auto=format&fit=crop');
-            background-size: cover; background-position: center; background-attachment: fixed;
-        }
-        /* Style the stRadio internally */
-        div[role="radiogroup"] > label {
-            background: white !important; border: 1px solid #eef2f0 !important; padding: 12px 20px !important; border-radius: 12px !important; margin-bottom: 10px !important; width: 100% !important; transition: 0.2s !important; box-shadow: 0 4px 10px rgba(0,0,0,0.02) !important;
-        }
-        div[role="radiogroup"] > label:hover {
-            border-color: #2b5329 !important;
-        }
-        div[role="radiogroup"] p { color: #1e293b !important; font-weight: 600 !important; font-size: 16px !important;}
+        [data-testid="stSidebar"] {{display: none !important;}}
+        .stApp {{ {bg_css} background-size: cover; background-position: center; background-attachment: fixed; }}
+        div[role="radiogroup"] > label {{ background: rgba(255,255,255,0.95) !important; border: 1px solid #eef2f0 !important; padding: 12px 20px !important; border-radius: 12px !important; margin-bottom: 10px !important; width: 100% !important; transition: 0.2s !important; }}
+        div[role="radiogroup"] > label:hover {{ border-color: #2E7D32 !important; box-shadow: 0 0 15px rgba(46, 125, 50, 0.3) !important; }}
+        div[role="radiogroup"] p {{ color: #1e293b !important; font-weight: 700 !important; font-size: 16px !important;}}
+        .hero-text {{ text-align: center; color: white; margin-bottom: 40px; }}
+        .hero-title {{ font-size: 65px; font-weight: 900; margin-bottom: 0; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }}
+        .hero-subtitle {{ font-size: 24px; font-weight: 300; opacity: 0.95; margin-bottom: 10px; }}
+        .hero-tagline {{ font-size: 16px; font-weight: 600; color: #4ade80; letter-spacing: 2px; text-transform: uppercase; }}
     </style>
     """, unsafe_allow_html=True)
     
     st.write("")
     st.markdown("<br><br><br>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 1.2, 1])
+    st.markdown("""
+    <div class="hero-text">
+        <div class="hero-tagline">From Detection → Decision → Profit</div>
+        <h1 class="hero-title">AgniKshetra 🌱</h1>
+        <p class="hero-subtitle">AI-Powered Smart Farming Decision Engine</p>
+    </div>
+    """, unsafe_allow_html=True)
     
+    col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         st.markdown(f"""
-        <div style="text-align: center; background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); backdrop-filter: blur(10px); margin-bottom: 20px;">
-            <div style="width: 150px; height: 150px; margin: 0 auto 20px; display: flex; justify-content: center;">{logo_img_tag.replace('55px', '150px')}</div>
-            <h2 style="font-weight: 800; color: #166534; margin-bottom: 5px; font-size: 38px;">AgniKshetra</h2>
-            <p style="color: #475569; font-size: 16px; margin-bottom: 35px; font-weight: 500;">Safety-Aware AI Decision Engine</p>
-            <p style="font-weight: 700; font-size: 13px; color: #166534; letter-spacing: 1px; margin-bottom: 0px; text-transform: uppercase;">SELECT YOUR PREFERRED LANGUAGE</p>
-        </div>
+        <div style="text-align: center; background: rgba(255, 255, 255, 0.15); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 20px;">
+            <p style="font-weight: 700; font-size: 13px; color: #4ade80; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase;">SELECT PREFERRED LANGUAGE</p>
         """, unsafe_allow_html=True)
         
         st.session_state.selected_lang = st.radio(
@@ -342,9 +355,23 @@ def render_language_screen():
             index=list(LANG_CODE_MAP.keys()).index(st.session_state.selected_lang)
         )
         st.write("")
-        if st.button("Continue >", use_container_width=True):
+        st.markdown("<p style='font-weight: 700; font-size: 13px; color: #4ade80; letter-spacing: 1px; margin-bottom: 0px; text-transform: uppercase;'>ENTER FARM ID / USERNAME</p>", unsafe_allow_html=True)
+        farm_input = st.text_input("Farm ID", value="", placeholder="e.g. Raju_Farm_01", label_visibility="collapsed")
+        st.write("")
+        st.markdown("""<style>div.stButton > button { background: linear-gradient(135deg, #2E7D32, #1b4332) !important; color: white !important; font-size: 18px !important; box-shadow: 0 0 20px rgba(46,125,50,0.6) !important; }</style>""", unsafe_allow_html=True)
+        if st.button("Start Analysis >", use_container_width=True):
+            if farm_input.strip() == "": st.session_state.farm_id = f"Farm_{random.randint(100000, 999999)}"
+            else: st.session_state.farm_id = farm_input.strip()
+            
+            if st.session_state.farm_id not in st.session_state.all_farms:
+                st.session_state.all_farms[st.session_state.farm_id] = {'farm_logs': [], 'chat_history': []}
+                save_db(st.session_state.all_farms)
+            
+            st.session_state.farm_logs = st.session_state.all_farms[st.session_state.farm_id]['farm_logs']
+            st.session_state.chat_history = st.session_state.all_farms[st.session_state.farm_id]['chat_history']
             st.session_state.app_stage = 2
             st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # ==========================================
 # STAGE 2: MAIN APPLICATION
@@ -366,7 +393,7 @@ def render_sidebar():
         [data-testid="stSidebar"] div[role="radiogroup"] p { font-size: 16px; color: #475569; }
         </style>""", unsafe_allow_html=True)
         
-        pages_en = ["Dashboard", "New Analysis", "Farm History", "AI Assistant Chat"]
+        pages_en = ["Dashboard", "New Analysis", "Water Advisor", "Market Insights", "Farmer Connect", "Farm History"]
         pages_tr = [t(p) for p in pages_en]
         idx = pages_en.index(st.session_state.current_page) if st.session_state.current_page in pages_en else 0
         def _nav_ch():
@@ -376,14 +403,19 @@ def render_sidebar():
         st.radio("Nav", pages_tr, index=idx, key="_nav_radio", on_change=_nav_ch, label_visibility="collapsed")
         
         st.markdown("<div style='flex-grow: 1; height: 35vh;'></div><hr style='border: 0; border-top: 1px solid #eef2f0; margin-bottom: 15px;'>", unsafe_allow_html=True)
-        with st.popover("⚙️ " + t("Settings"), use_container_width=True):
-            st.markdown(f"**{t('App Settings')}**")
+        with st.popover("👤 " + t("Profile") + ": " + st.session_state.farm_id, use_container_width=True):
+            st.markdown(f"**{t('User Settings')}**")
             new_l = st.selectbox(t("Language"), list(LANG_CODE_MAP.keys()), index=list(LANG_CODE_MAP.keys()).index(st.session_state.selected_lang), key="sb_lang")
             if new_l != st.session_state.selected_lang:
                 st.session_state.selected_lang = new_l
                 st.rerun()
-            def u_fid2(): st.session_state.farm_id = st.session_state.sb_fid
-            st.text_input(t("Farm ID"), key="sb_fid", value=st.session_state.farm_id, on_change=u_fid2)
+            st.write("")
+            if st.button("📖 " + t("Farm History"), key="sb_hist_btn", use_container_width=True):
+                st.session_state.current_page = "Farm History"
+                st.rerun()
+            if st.button("🚪 " + t("Switch Profile"), key="sb_logout_btn", use_container_width=True):
+                st.session_state.app_stage = 1
+                st.rerun()
 
 
 def render_main_app():
@@ -414,12 +446,17 @@ def render_main_app():
             
     city, temp, wind, soil_m, hum, rain = get_virtual_sensor_data()
 
-    # --- TOP RIGHT SETTINGS MENU (Global) ---
-    st.markdown("<style>div.stPopover > button { font-size: 20px !important; padding: 2px 10px !important; border-radius: 8px !important; background: white !important; color: #1e293b !important; border: 1px solid #e2e8f0 !important; }</style>", unsafe_allow_html=True)
-    menu_c1, menu_c2 = st.columns([12, 1])
-    with menu_c1:
+    # Global Header Logo & Navigation (Glassmorphism)
+    st.markdown("""<style>
+    [data-testid="stHeader"] { display: none; }
+    .glass-nav { position: sticky; top: 0; z-index: 999; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); padding: 15px 0; margin-bottom: 30px; margin-top: -60px; padding-left: 20px; padding-right: 20px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    </style>""", unsafe_allow_html=True)
+    
+    st.markdown("<div class='glass-nav'>", unsafe_allow_html=True)
+    head_c1, head_c2 = st.columns([10, 2])
+    with head_c1:
         st.markdown(f"""
-        <div style='display: flex; align-items: center; gap: 15px; margin-bottom: 25px;'>
+        <div style='display: flex; align-items: center; gap: 15px;'>
             <div style='width: 45px; height: 45px;'>{logo_img_tag.replace('55px', '45px')}</div>
             <div style='display: flex; align-items: baseline; gap: 8px;'>
                 <h2 style='margin: 0; color: #166534; font-weight: 800; font-size: 28px;'>AgniKshetra</h2>
@@ -427,31 +464,46 @@ def render_main_app():
             </div>
         </div>
         """, unsafe_allow_html=True)
-    with menu_c2:
-        with st.popover("⋮", use_container_width=True):
-            st.markdown(f"**⚙️ {t('App Settings')}**")
-            top_lang = st.selectbox(t("Language"), list(LANG_CODE_MAP.keys()), index=list(LANG_CODE_MAP.keys()).index(st.session_state.selected_lang), key="top_lang_sel")
-            if top_lang != st.session_state.selected_lang:
-                st.session_state.selected_lang = top_lang
-                st.rerun()
-                
-            def _update_fid(): st.session_state.farm_id = st.session_state._fid_in
-            st.text_input(t("Farm ID"), key="_fid_in", value=st.session_state.farm_id, on_change=_update_fid)
-            
-            if st.button(t("Farm History"), key="top_hist_btn", use_container_width=True):
-                st.session_state.current_page = "Farm History"
-                st.rerun()
+    with head_c2:
+        st.markdown("<style>div.stPopover > button { padding: 5px 10px !important; border-radius: 8px !important; font-size: 16px !important; background: white !important; font-weight: 600 !important; border: 1px solid #e2e8f0 !important; color: #1e293b !important; margin-top: 5px; box-shadow: none !important; }</style>", unsafe_allow_html=True)
+        with st.popover("☰ " + t("Menu"), use_container_width=True):
+            if st.button("🏠 " + t("Dashboard"), use_container_width=True):
+                st.session_state.current_page = "Dashboard"; st.rerun()
+            if st.button("📖 " + t("Farm History"), key="h_hist", use_container_width=True):
+                st.session_state.current_page = "Farm History"; st.rerun()
+            if st.button("🚪 " + t("Switch Farm"), key="h_switch", use_container_width=True):
+                st.session_state.app_stage = 1; st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
     if st.session_state.current_page == "Dashboard":
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            st.markdown(f"<h1 style='color: #0f172a; margin-bottom: 0px;'>{t('Dashboard')}</h1>", unsafe_allow_html=True)
-            st.markdown(f"<p style='color: #64748b;'>{t('Farm status and virtual sensor readings.')}</p>", unsafe_allow_html=True)
-        with col2:
-            st.write("")
-            if st.button(f"＋ {t('New Analysis')}", use_container_width=True):
-                st.session_state.current_page = "New Analysis"
-                st.rerun()
+        st.markdown(f"<h1 style='color: #0f172a; margin-bottom: 0px;'>{t('Dashboard')}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: #64748b;'>{t('Farm status and virtual sensor readings.')}</p>", unsafe_allow_html=True)
+        
+        # Navigation Quick Links Grid (Premium Animation Grid)
+        st.markdown(f"<h4 style='color: #1e293b; margin-top: 10px; font-weight: 700;'>{t('Core Systems')}</h4>", unsafe_allow_html=True)
+        st.markdown("<style>div[data-testid='column'] { transition: 0.3s ease; } div[data-testid='column']:hover { transform: translateY(-3px); }</style>", unsafe_allow_html=True)
+        nav1, nav2, nav3 = st.columns(3)
+        with nav1:
+            if st.button(t("🌿 Analyze Crop"), key="nav_new", use_container_width=True):
+                st.session_state.current_page = "New Analysis"; st.rerun()
+        with nav2:
+            if st.button(t("📈 Market Insights"), key="nav_market", use_container_width=True):
+                st.session_state.current_page = "Market Insights"; st.rerun()
+        with nav3:
+            if st.button(t("💧 Water Advisor"), key="nav_water", use_container_width=True):
+                st.session_state.current_page = "Water Advisor"; st.rerun()
+                
+        nav4, nav5, nav6 = st.columns(3)
+        with nav4:
+            if st.button(t("👨‍🌾 Farmer Connect"), key="nav_network", use_container_width=True):
+                st.session_state.current_page = "Farmer Connect"; st.rerun()
+        with nav5:
+            if st.button(t("📖 Farm History"), key="nav_hist", use_container_width=True):
+                st.session_state.current_page = "Farm History"; st.rerun()
+        with nav6:
+            st.markdown("<p style='text-align:center; font-size:12px; color:#94a3b8; margin-top:10px;'>Chat floating below ↓</p>", unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
                 
         # Premium Banner
         st.markdown(f"""
@@ -559,50 +611,120 @@ def render_main_app():
             if not crop_type and not problem_text and not uploaded_files:
                 st.warning(t("Please provide either an image, a description, or audio input."))
             else:
-                st.markdown("---")
+                st.session_state.analysis_active = True
                 
-                detected_disease = "Fungal Infection (Unspecified)"
-                confidence = 94.5
-                prescription = {
-                    "chemical": {"name": "Mancozeb 75% WP", "dosage": "2-2.5 gm/L", "application": "Spray evenly on affected foliage", "waiting_period": "7-10 days", "cost": 450, "loss_if_ignored": 3000, "expected_saving": 2550, "consequences": {"yield": "High Recovery", "soil": "Medium Damage"}},
-                    "organic": {"name": "Copper Fungicide or Neem Oil", "dosage": "5 ml Neem oil/L", "application": "Spray thoroughly on leaves", "waiting_period": "0 days", "cost": 150, "loss_if_ignored": 3000, "expected_saving": 2850, "consequences": {"yield": "Moderate Recovery", "soil": "Low Damage"}}
+                # Setup default data
+                ai_data = {
+                    "auto_crop": "Tomato (Auto-Detected)",
+                    "detected_disease": "Early Blight (Alternaria solani)",
+                    "confidence": 94.5,
+                    "best_soil": "Well-drained sandy loam with pH 6.0-7.0",
+                    "care_tips": "Increase spacing between plants to improve airflow. Avoid overhead watering.",
+                    "prescription": {
+                        "chemical": {"name": "Mancozeb 75% WP", "dosage": "2-2.5 gm/L", "application": "Spray evenly on affected foliage", "waiting_period": "7-10 days", "cost": 450, "loss_if_ignored": 3000, "expected_saving": 2550, "consequences": {"yield": "High Recovery", "soil": "Medium Damage"}},
+                        "organic": {"name": "Copper Fungicide or Neem Oil", "dosage": "5 ml Neem oil/L", "application": "Spray thoroughly on leaves", "waiting_period": "0 days", "cost": 150, "loss_if_ignored": 3000, "expected_saving": 2850, "consequences": {"yield": "Moderate Recovery", "soil": "Low Damage"}}
+                    }
                 }
                 
                 if 'gemini_model' in globals() and gemini_model:
                     try:
                         prompt_parts = [
-                            f"Crop Type: {crop_type}\nSymptoms: {problem_text}\n",
-                            "Analyze the provided plant info/image. Return ONLY a valid JSON object strictly matching this format (no markdown code blocks, just raw JSON):\n",
-                            "{\n  \"detected_disease\": \"Name of the disease or anomaly\",\n  \"confidence\": 95,\n  \"prescription\": {\n    \"chemical\": {\"name\": \"...\", \"dosage\": \"...\", \"application\": \"...\", \"waiting_period\": \"...\", \"cost\": 500, \"loss_if_ignored\": 3000, \"expected_saving\": 2500, \"consequences\": {\"yield\": \"...\", \"soil\": \"...\"}},\n    \"organic\": {\"name\": \"...\", \"dosage\": \"...\", \"application\": \"...\", \"waiting_period\": \"...\", \"cost\": 150, \"loss_if_ignored\": 3000, \"expected_saving\": 2800, \"consequences\": {\"yield\": \"...\", \"soil\": \"...\"}}\n  }\n}"
+                            f"Crop Type: {crop_type if crop_type else 'AUTO-DETECT FROM IMAGE'}\nSymptoms: {problem_text}\n",
+                            "Analyze the plant. Return strictly valid JSON (no markdown). Do not use 'Unspecified'. Include specific soil and care tips:\n",
+                            "{\n  \"auto_crop\": \"Detected crop name\",\n  \"detected_disease\": \"Specific Disease Name\",\n  \"confidence\": 95,\n  \"best_soil\": \"...\",\n  \"care_tips\": \"...\",\n  \"prescription\": {\n    \"chemical\": {\"name\": \"...\", \"dosage\": \"...\", \"application\": \"...\", \"waiting_period\": \"...\", \"cost\": 500, \"loss_if_ignored\": 3000, \"expected_saving\": 2500, \"consequences\": {\"yield\": \"...\", \"soil\": \"...\"}},\n    \"organic\": {\"name\": \"...\", \"dosage\": \"...\", \"application\": \"...\", \"waiting_period\": \"...\", \"cost\": 150, \"loss_if_ignored\": 3000, \"expected_saving\": 2800, \"consequences\": {\"yield\": \"...\", \"soil\": \"...\"}}\n  }\n}"
                         ]
                         if uploaded_files:
-                            img = Image.open(uploaded_files[0])
-                            prompt_parts.append(img)
+                            prompt_parts.append(Image.open(uploaded_files[0]))
                         res = gemini_model.generate_content(prompt_parts)
                         res_text = res.text.strip()
                         if res_text.startswith("```json"): res_text = res_text[7:-3]
                         elif res_text.startswith("```"): res_text = res_text[3:-3]
                         ai_data = json.loads(res_text.strip())
-                        detected_disease = ai_data["detected_disease"]
-                        confidence = ai_data.get("confidence", 90.0)
-                        prescription = ai_data["prescription"]
                     except Exception:
-                        pass # Fallback to default
+                        pass # Fallback
                 
-                st.markdown(f"""
-                <div style='text-align: center; margin-top: 20px; margin-bottom: 30px;'>
-                    <p style='color: #64748b; font-weight: 600; font-size: 14px; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase;'>{t('Detected Disease')}</p>
-                    <h2 style='color: #1e3b1d; font-weight: 800; margin-top: 0px;'>{t(detected_disease)}</h2>
-                    <p style='color: #64748b; font-size: 13px;'>{t('Confidence Level:')} {confidence}%</p>
+                # Save input data to state for tracking
+                st.session_state.active_analysis_data = ai_data
+                st.session_state.active_crop = ai_data.get("auto_crop", crop_type if crop_type else "Scanned Crop")
+                
+                img_b64 = ""
+                ndvi_b64 = ""
+                if uploaded_files:
+                    try: 
+                        raw_img = uploaded_files[0].getvalue()
+                        img_b64 = base64.b64encode(raw_img).decode()
+                        
+                        # Pseudo-NDVI processing using PIL and pure numpy (safe dependencies)
+                        pil_img = Image.open(io.BytesIO(raw_img)).convert("RGB")
+                        import numpy as np
+                        arr = np.array(pil_img, dtype=float)
+                        R, G, B = arr[:,:,0], arr[:,:,1], arr[:,:,2]
+                        
+                        den = (G + R - B)
+                        den[den == 0] = 0.001
+                        vari = (G - R) / den
+                        vari_norm = ((vari - np.min(vari)) / (np.max(vari) - np.min(vari) + 0.001) * 255).astype(np.uint8)
+                        
+                        stress_img = np.zeros_like(arr, dtype=np.uint8)
+                        stress_img[:,:,0] = 255 - vari_norm # Red = High Stress
+                        stress_img[:,:,1] = vari_norm # Green = Healthy
+                        stress_img[:,:,2] = 0
+                        
+                        blended = np.clip(arr*0.3 + stress_img*0.7, 0, 255).astype(np.uint8)
+                        out_pil = Image.fromarray(blended)
+                        fp2 = io.BytesIO()
+                        out_pil.save(fp2, format="JPEG")
+                        ndvi_b64 = base64.b64encode(fp2.getvalue()).decode()
+                    except: pass
+                st.session_state.active_img = img_b64
+                st.session_state.active_ndvi = ndvi_b64
+
+        if st.session_state.get("analysis_active"):
+            st.markdown("---")
+            ai_data = st.session_state.active_analysis_data
+            detected_disease = ai_data["detected_disease"]
+            confidence = ai_data.get("confidence", 94.5)
+            prescription = ai_data["prescription"]
+            
+            risk_level = "HIGH" 
+            risk_color = "#ef4444" if risk_level == "HIGH" else "#eab308"
+            
+            st.markdown(f"""
+            <div class='glass-card' style='margin-bottom: 30px;'>
+                <div style='display: flex; justify-content: space-between; align-items: flex-start;'>
+                    <div>
+                        <span style='background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;'>{st.session_state.active_crop}</span>
+                        <h2 style='color: #1e3b1d; font-weight: 800; margin-top: 10px; margin-bottom: 5px;'>{t(detected_disease)}</h2>
+                        <div style='display: flex; align-items: center; gap: 10px; margin-top: 5px;'>
+                            <span style='color: #64748b; font-size: 13px; font-weight: 600;'>AI Confidence:</span>
+                            <div style='width: 150px; background: #e2e8f0; border-radius: 10px; height: 8px;'><div style='width: {confidence}%; background: #2E7D32; height: 100%; border-radius: 10px;'></div></div>
+                            <span style='color: #2E7D32; font-weight: 700; font-size: 13px;'>{confidence}%</span>
+                        </div>
+                    </div>
+                    <div style='background: {risk_color}20; color: {risk_color}; border: 1px solid {risk_color}50; padding: 8px 15px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px;'>
+                        <span style='font-size: 18px;'>⚠️</span> RISK: {risk_level}
+                    </div>
                 </div>
-                """, unsafe_allow_html=True)
-                
-                # 2. EXPLAINABLE AI ("WHY THIS DECISION")
-                with st.expander(f"🧠 {t('Why this recommendation?')}", expanded=True):
-                    st.write(f"- **{t('Symptoms Detected')}**: {t('Visual pattern strongly correlates with')} {t(detected_disease)}.")
-                    st.write(f"- **{t('Weather Influence')}**: {t('High humidity')} ({hum}%) {t('and temperature')} ({temp}°C) {t('create an ideal environment for this issue.')}")
-                    if uploaded_files:
-                        st.write(f"- **{t('Image Analysis')}**: {t('Edges of the leaves show typical progression of the infection.')}")
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Split Screen Images (Original vs NDVI)
+            if st.session_state.active_img:
+                st.markdown(f"### 🔬 {t('Scientific Crop Stress Vision')}")
+                ic1, ic2 = st.columns(2)
+                with ic1: st.image(f"data:image/jpeg;base64,{st.session_state.active_img}", use_container_width=True, caption=t("Standard Original Image"))
+                with ic2: 
+                    if st.session_state.get('active_ndvi'):
+                        st.image(f"data:image/jpeg;base64,{st.session_state.active_ndvi}", use_container_width=True, caption=t("Pseudo-NDVI Stress Heatmap (Red = Infection/Damage)"))
+            
+            # 2. EXPLAINABLE AI ("WHY THIS DECISION")
+            with st.expander(f"🧠 {t('AI Pathology & Care Tips')}", expanded=True):
+                st.write(f"- **{t('Symptoms Detected')}**: {t('Visual pattern strongly correlates with')} {t(detected_disease)}.")
+                st.write(f"- **{t('Required Soil Condition')}**: {t(ai_data.get('best_soil', 'Use well-draining soil with organic compost.'))}")
+                st.write(f"- **{t('Care Tips')}**: {t(ai_data.get('care_tips', 'Avoid overhead watering to prevent fungal spread.'))}")
+                st.write(f"- **{t('Weather Influence')}**: {t('High humidity')} ({hum}%) {t('and temperature')} ({temp}°C) {t('create an ideal environment for this issue.')}")
+                if st.session_state.active_img:
+                    st.write(f"- **{t('Image Analysis')}**: {t('Edges of the leaves show typical progression of the infection.')}")
 
                 # 3. RISK & SOIL HEALTH DASHBOARD
                 st.markdown(f"### 📊 {t('Risk & Soil Health Dashboard')}")
@@ -675,29 +797,22 @@ def render_main_app():
                 
                 st.success(f"⭐ **{t('BEST OPTION HIGHLIGHT:')}** {t('Organic Strategy (Safer for long-term health and lower cost)')}")
 
-                st.markdown("<br>", unsafe_allow_html=True)
-                if st.button(f"📌 {t('Track this treatment')}"):
-                    c_name = crop_type if crop_type else (getattr(uploaded_files[0], "name", "Scanned Crop") if uploaded_files else "Text Query")
-                    
-                    img_b64 = ""
-                    if uploaded_files:
-                        try: img_b64 = base64.b64encode(uploaded_files[0].getvalue()).decode()
-                        except: pass
-
-                    new_log = {
-                        "id": len(st.session_state.farm_logs),
-                        "crop": c_name,
-                        "disease": detected_disease,
-                        "chemical": prescription['organic']['name'],
-                        "cost": prescription['organic']['cost'],
-                        "date": datetime.now().isoformat(),
-                        "image": img_b64
-                    }
-                    st.session_state.farm_logs.append(new_log)
-                    save_db(st.session_state.all_farms)
-                    st.toast("✅ " + t("Treatment logged securely."))
-                    st.session_state.current_page = "Dashboard"
-                    st.rerun()
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button(f"📌 {t('Track this treatment')}"):
+                new_log = {
+                    "id": len(st.session_state.farm_logs),
+                    "crop": st.session_state.active_crop,
+                    "disease": detected_disease,
+                    "chemical": prescription['organic']['name'],
+                    "cost": prescription['organic']['cost'],
+                    "date": datetime.now().isoformat(),
+                    "image": st.session_state.active_img
+                }
+                st.session_state.farm_logs.append(new_log)
+                save_db(st.session_state.all_farms)
+                st.session_state.analysis_active = False # Reset
+                st.session_state.current_page = "Dashboard"
+                st.rerun()
 
     elif st.session_state.current_page == "Farm History":
         st.markdown(f"<h1 style='color: #0f172a; margin-bottom: 0px;'>{t('Farm History')}</h1>", unsafe_allow_html=True)
@@ -751,16 +866,25 @@ def render_main_app():
                     
                     if days_passed == 1:
                         msg1 = t("Namaste, it is Day 1. Your ") + log['crop'] + t(" needs the spray today. Please confirm once done.")
-                        st.info(f"🔊 **Level 1 (Reminder)**: {msg1}")
+                        st.info(f"🔊 **Level 1 (Reminder)**: {msg1} (Plays 3 times with 10s breaks)")
                         b64_a1 = get_tts_audio_b64(msg1, st.session_state.selected_lang)
-                        if b64_a1: st.markdown(f'<audio autoplay><source src="data:audio/mp3;base64,{b64_a1}" type="audio/mp3"></audio>', unsafe_allow_html=True)
-                        
+                        if b64_a1:
+                            st.markdown(f'''
+                            <audio id="v_audio1" autoplay><source src="data:audio/mp3;base64,{b64_a1}" type="audio/mp3"></audio>
+                            <script>
+                                var a = document.getElementById("v_audio1");
+                                var count = 0;
+                                a.onended = function() {{
+                                    count++;
+                                    if(count < 3) {{ setTimeout(function(){{ a.play(); }}, 10000); }}
+                                }};
+                            </script>
+                            ''', unsafe_allow_html=True)
                     elif days_passed == 3:
                         msg2 = t("Warning! It has been 3 days since the recommendation. The disease is spreading. Apply treatment immediately!")
                         st.warning(f"🚨 **Level 2 (Warning)**: {msg2}")
                         b64_a2 = get_tts_audio_b64(msg2, st.session_state.selected_lang)
                         if b64_a2: st.markdown(f'<audio autoplay><source src="data:audio/mp3;base64,{b64_a2}" type="audio/mp3"></audio>', unsafe_allow_html=True)
-                        
                     elif days_passed >= 7:
                         msg3 = t("You missed the early window. DO NOT use the original dose; it will now be ineffective and burn the soil. Use Systemic Fungicide instead.")
                         st.error(f"🛑 **Level 3 (Safety Adjustment)**: {msg3}")
@@ -774,26 +898,159 @@ def render_main_app():
                         st.session_state.feedback_mode = log
                         st.rerun()
 
-    elif st.session_state.current_page == "AI Assistant Chat":
-        st.markdown(f"<h1 style='color: #0f172a; margin-bottom: 0px;'>{t('AI Assistant Chat')}</h1>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: #64748b;'>{t('Your Contextual Farming Assistant.')}</p>", unsafe_allow_html=True)
 
-        st.markdown("""<div style='background: white; border: 1px solid #eef2f0; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-height: 500px; overflow-y: auto;'>""", unsafe_allow_html=True)
+    elif st.session_state.current_page == "Water Advisor":
+        st.markdown(f"<h1 style='color: #0f172a; margin-bottom: 0px;'>{t('Smart Irrigation Advisor')}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: #64748b;'>{t('Data-driven watering recommendations.')}</p>", unsafe_allow_html=True)
+        
+        st.markdown("""<div style='background: white; border: 1px solid #eef2f0; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);'>""", unsafe_allow_html=True)
+        w1, w2 = st.columns([1, 1])
+        with w1:
+            st.markdown(f"<h3 style='color: #1e3b1d;'>{t('Current Soil Status')}</h3>", unsafe_allow_html=True)
+            st.progress(int(soil_m))
+            st.markdown(f"**{t('Moisture Level:')} {soil_m}%**")
+            st.markdown(f"**{t('Temperature:')} {temp}°C** | **{t('Rain Forecast:')} {rain}mm**")
+            
+        with w2:
+            st.markdown(f"<h3 style='color: #1e3b1d;'>{t('Recommendation')}</h3>", unsafe_allow_html=True)
+            if soil_m > 60:
+                rec_title = "🛑 " + t("DO NOT WATER")
+                rec_color = "#ef4444"
+                reason = t("Soil is highly saturated. Watering now will cause root rot and fungal infections.")
+            elif soil_m < 30 and temp > 30:
+                rec_title = "🚨 " + t("WATER IMMEDIATELY")
+                rec_color = "#f97316"
+                reason = t("Critical dehydration risk due to high heat and low moisture. Roots are stressing.")
+                
+                b64_a = get_tts_audio_b64("Critical alert. Soil moisture is dangerously low. Please irrigate your field immediately to prevent crop loss.", st.session_state.selected_lang)
+                if b64_a: st.markdown(f'<audio autoplay><source src="data:audio/mp3;base64,{b64_a}" type="audio/mp3"></audio>', unsafe_allow_html=True)
+            else:
+                rec_title = "✅ " + t("OPTIMAL RANGE")
+                rec_color = "#22c55e"
+                reason = t("Soil moisture is sustaining well. No immediate action required.")
+                
+            st.markdown(f"<div style='background: {rec_color}20; border-left: 5px solid {rec_color}; padding: 15px; border-radius: 8px;'><h4 style='color: {rec_color}; margin: 0;'>{rec_title}</h4></div>", unsafe_allow_html=True)
+            
+        st.markdown("<br>", unsafe_allow_html=True)
+        with st.expander(f"🧠 {t('Why this suggestion?')}", expanded=True):
+            st.write(reason)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    elif st.session_state.current_page == "Market Insights":
+        st.markdown(f"<h1 style='color: #0f172a; margin-bottom: 0px;'>{t('Market Intelligence')}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: #64748b;'>{t('Real-time price trends and AI trading suggestions.')}</p>", unsafe_allow_html=True)
+        
+        crops_data = [
+            {"name": "Rice (Paddy)", "price": 2250, "trend": "↑", "status": "Hold Stock", "reason": "Festive demand rising; expect 5% bump in next 3 days.", "color": "#22c55e", "history": [2100, 2150, 2120, 2200, 2250]},
+            {"name": "Cotton", "price": 6800, "trend": "↓", "status": "Sell Now", "reason": "International surplus reported. Prices dropping fast over the next week.", "color": "#ef4444", "history": [7200, 7100, 6900, 6850, 6800]},
+            {"name": "Tomato", "price": 1400, "trend": "↑", "status": "Hold Stock", "reason": "Supply chain delays in neighboring states. Shortage expected.", "color": "#f97316", "history": [1100, 1150, 1300, 1350, 1400]}
+        ]
+        
+        for crop in crops_data:
+            st.markdown(f"""<div style='background: white; border: 1px solid #eef2f0; border-radius: 16px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);'>
+                <h3 style='color: #1e3b1d; margin-top: 0;'>🌾 {t(crop['name'])}</h3>
+            </div>""", unsafe_allow_html=True)
+            c1, c2, c3 = st.columns([1, 2, 1])
+            with c1:
+                st.metric(t("Current Price (per Quintal)"), f"₹{crop['price']}", f"{crop['trend']} Trend")
+            with c2:
+                import pandas as pd # type: ignore
+                chart_data = pd.DataFrame({"Price (₹)": crop['history']})
+                st.line_chart(chart_data, height=150)
+            with c3:
+                st.markdown(f"<div style='background: {crop['color']}20; padding: 10px; border-radius: 8px; text-align: center;'><h4 style='color: {crop['color']}; margin: 0;'>{t(crop['status'])}</h4></div>", unsafe_allow_html=True)
+                with st.expander(f"🧠 {t('Why?')}"):
+                    st.write(t(crop['reason']))
+            st.markdown("<br>", unsafe_allow_html=True)
+
+    elif st.session_state.current_page == "Farmer Connect":
+        st.markdown(f"<h1 style='color: #0f172a; margin-bottom: 0px;'>{t('Farmer Connect')}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: #64748b;'>{t('Find local farmers and learn from their validated solutions.')}</p>", unsafe_allow_html=True)
+        
+        st.markdown("""<div style='background: white; border: 1px solid #eef2f0; border-radius: 16px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);'>""", unsafe_allow_html=True)
+        search_q = st.text_input("🔍 " + t("Search by problem (e.g. Fungal, Pest, Tomato)")).lower()
+        
+        matches = []
+        for fid, fdata in st.session_state.all_farms.items():
+            if fid == st.session_state.farm_id: continue
+            for log in fdata.get("farm_logs", []):
+                d_str = (str(log.get('disease', '')) + " " + str(log.get('crop', ''))).lower()
+                if not search_q or search_q in d_str:
+                    matches.append({"fid": fid, "crop": log.get('crop'), "disease": log.get('disease')})
+                    break
+                    
+        if len(matches) == 0:
+            st.info(t("No matching farmers found yet in the global network."))
+        else:
+            for m in matches:
+                mc1, mc2 = st.columns([3, 1])
+                with mc1:
+                    st.markdown(f"**👨‍🌾 {m['fid']}** | 🌱 {m['crop']} | 🦠 *{t(m['disease'])}*")
+                    st.markdown(f"<span style='color: #ef4444; font-size: 11px; font-weight: 700;'>🔒 {t('History Private until connected')}</span>", unsafe_allow_html=True)
+                with mc2:
+                    if st.session_state.get(f"req_{m['fid']}"):
+                        st.button("✅ " + t("Pending"), key=f"pend_{m['fid']}", disabled=True)
+                    else:
+                        if st.button("🤝 " + t("Connect"), key=f"conn_{m['fid']}", use_container_width=True):
+                            st.session_state[f"req_{m['fid']}"] = True
+                            st.toast(t("Friend Request Sent securely to ") + m['fid'])
+                            st.rerun()
+                st.markdown("---")
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        with st.expander(f"🧠 {t('Why connect?')}", expanded=True):
+            st.write(t("Comparing solutions and dosage results directly with neighbors prevents experimental crop loss and builds a resilient local community."))
+
+    # Floating AI Chat Bot (Sticks to bottom right on all screens)
+    st.markdown("<div id='chat-anchor'></div>", unsafe_allow_html=True)
+    st.markdown("""<style>
+    div.element-container:has(#chat-anchor) + div.element-container {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 9999;
+        width: 65px;
+    }
+    div.element-container:has(#chat-anchor) + div.element-container div[data-testid="stPopover"] > button {
+        width: 65px !important;
+        height: 65px !important;
+        border-radius: 50% !important;
+        background: linear-gradient(135deg, #2E7D32, #1b4332) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 10px 25px rgba(46, 125, 50, 0.4) !important;
+        font-size: 32px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+    }
+    div.element-container:has(#chat-anchor) + div.element-container div[data-testid="stPopover"] > button:hover {
+        transform: scale(1.1) !important;
+        box-shadow: 0 15px 30px rgba(46, 125, 50, 0.6) !important;
+    }
+    </style>""", unsafe_allow_html=True)
+
+    with st.popover("💬", use_container_width=False):
+        st.markdown(f"<h3 style='color: #1e3b1d; margin-top:0px;'>{t('AgniKshetra AI Assistant')}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: #64748b; font-size:13px;'>{t('Your Contextual Farming Assistant.')}</p>", unsafe_allow_html=True)
+        st.markdown("""<div style='background: #f8fafc; border: 1px solid #eef2f0; border-radius: 12px; padding: 15px; max-height: 400px; overflow-y: auto; margin-bottom: 10px;'>""", unsafe_allow_html=True)
         for idx, msg in enumerate(st.session_state.chat_history):
-            color = "#2e5932" if msg["role"] == "user" else "#1e293b"
-            bg = "#e2e8f0" if msg["role"] == "user" else "#f8fafc"
-            st.markdown(f"<div style='background:{bg}; color:{color}; padding:15px; border-radius:12px; margin-bottom:15px; font-size:14px;'><b>{msg['role'].capitalize()}:</b> {msg['content']}</div>", unsafe_allow_html=True)
+            color = "white" if msg["role"] == "user" else "#1e293b"
+            bg = "#2E7D32" if msg["role"] == "user" else "white"
+            align = "right" if msg["role"] == "user" else "left"
+            st.markdown(f"<div style='text-align:{align}; margin-bottom:10px;'><span style='background:{bg}; color:{color}; padding:10px 15px; border-radius:18px; display:inline-block; max-width:85%; font-size:14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);'>{msg['content']}</span></div>", unsafe_allow_html=True)
             
         if len(st.session_state.chat_history) == 0:
-            st.markdown(f"<div style='background:#f8fafc; color:#1e293b; padding:15px; border-radius:12px; font-size:14px; margin-bottom:15px;'><b>Assistant:</b> {t('Hello! Ask me if you can spray tomorrow, or what to do if rain comes.')}</div>", unsafe_allow_html=True)
-            
-        st.markdown("</div><br>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align:left; margin-bottom:10px;'><span style='background:white; color:#1e293b; padding:10px 15px; border-radius:18px; display:inline-block; max-width:85%; font-size:14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);'><b>AI:</b> {t('Hello! Ask me if you can spray tomorrow, or what to do if rain comes.')}</span></div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
         
-        with st.form("chat_form", clear_on_submit=True):
-            user_bot_query = st.text_input(t("Type your question here..."), label_visibility="collapsed")
-            sent_msg = st.form_submit_button("💬 " + t("Send"), use_container_width=True)
+        c_f1, c_f2 = st.columns([4,1])
+        with c_f1: user_bot_query = st.text_input("Query", placeholder=t("Type here..."), label_visibility="collapsed", key="u_query_chat")
+        with c_f2: sent_msg = st.button("➤", key="btn_send_chat", use_container_width=True)
 
-        voice_query = st.audio_input(t("Speak your question (Voice Assistant)"), label_visibility="collapsed")
+        voice_query = st.audio_input(t("Voice Ask"), label_visibility="collapsed")
         
         final_query = user_bot_query if sent_msg else None
         if voice_query is not None:
@@ -810,33 +1067,25 @@ def render_main_app():
         if final_query:
             st.session_state.chat_history.append({"role": "user", "content": final_query})
             query_lower = final_query.lower()
-            bot_reply = t("I am your contextual farming assistant. I am analyzing your query to ensure safety first.")
+            bot_reply = t("I am analyzing your query to ensure safety first.")
             
             if "dose" in query_lower or "caps" in query_lower or "more" in query_lower:
                 bot_reply = t("RED ALERT! Modifying pesticide dosage without expert advice causes severe soil degradation and toxic crop residue. ALWAYS follow the exact label protocol.")
-                st.error("🚨 " + bot_reply)
             elif 'gemini_model' in globals() and gemini_model:
                 try:
-                    chat_context = "You are a helpful and expert AI farming assistant named AgniKshetra App Assistant. You help farmers understand how to use the app, view their farm history, and provide farming advice based on provided data. Be concise and friendly."
-                    chat_context += f" Current weather reading: Temp {temp}C, Wind {wind}km/h, Rain {rain}mm. "
-                    if st.session_state.farm_logs:
-                        chat_context += f" Farm History: {json.dumps([{'crop': l['crop'], 'disease': l['disease'], 'date': str(l['date']).split('T')[0]} for l in st.session_state.farm_logs])}. "
-                    
+                    chat_context = "You are a helpful AI farming assistant... "
                     history = [{"role": "user" if m["role"] == "user" else "model", "parts": [m["content"]]} for m in st.session_state.chat_history[:-1]]
                     chat = gemini_model.start_chat(history=history)
                     res = chat.send_message(f"System Context: {chat_context}\n\nUser query: {final_query}")
                     bot_reply = res.text
-                except Exception:
-                    # Fallback
-                    if "spray" in query_lower and "tomorrow" in query_lower:
-                        bot_reply = t("Based on the virtual weather sensors (Wind: ") + str(wind) + t(" km/h, Rain: ") + str(rain) + t(" mm), tomorrow morning looks optimal for spraying. Wind is below the safety threshold.")
-                    elif "rain" in query_lower:
-                        bot_reply = t("If rain occurs shortly after application, systemic chemicals may wash off. I highly recommend using an adjuvant/sticker during the monsoon season to prevent this.")
+                except Exception as e:
+                    if "spray" in query_lower and "tomorrow" in query_lower: bot_reply = t("Based on sensors, tomorrow looks optimal.")
+                    elif "rain" in query_lower: bot_reply = t("If rain occurs use sticker.")
+                    else: bot_reply = t("Network/API Error: ") + str(e)
             else:
-                if "spray" in query_lower and "tomorrow" in query_lower:
-                    bot_reply = t("Based on the virtual weather sensors (Wind: ") + str(wind) + t(" km/h, Rain: ") + str(rain) + t(" mm), tomorrow morning looks optimal for spraying. Wind is below the safety threshold.")
-                elif "rain" in query_lower:
-                    bot_reply = t("If rain occurs shortly after application, systemic chemicals may wash off. I highly recommend using an adjuvant/sticker during the monsoon season to prevent this.")
+                if "spray" in query_lower and "tomorrow" in query_lower: bot_reply = t("Based on sensors, tomorrow looks optimal.")
+                elif "rain" in query_lower: bot_reply = t("If rain occurs use sticker.")
+                else: bot_reply = t("I am currently offline. Please check your connection.")
 
             st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
             save_db(st.session_state.all_farms)

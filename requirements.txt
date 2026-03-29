@@ -1,0 +1,9 @@
+streamlit==1.40.0
+deep-translator
+SpeechRecognition
+gTTS
+google-generativeai
+opencv-python-headless
+numpy
+Pillow
+SQLAlchemy

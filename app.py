@@ -35,6 +35,7 @@ try:
 except Exception:
     gemini_model = None
 
+@st.cache_data(show_spinner=False)
 def get_base64_image(image_path):
     try:
         with open(image_path, "rb") as img_file:
@@ -521,14 +522,20 @@ def render_main_app():
             audio_value = st.audio_input(t("Speak your problem (Voice Input)"), label_visibility="collapsed")
             problem_text = symptoms
             if audio_value is not None:
-                try:
-                    recognizer = sr.Recognizer()
-                    with sr.AudioFile(audio_value) as source:
-                        audio_data = recognizer.record(source)
-                        problem_text = recognizer.recognize_google(audio_data, language=LANG_CODE_MAP[st.session_state.selected_lang]["sr"])
-                        st.success(f"**{t('Heard:')}** {problem_text}")
-                except:
-                    pass
+                audio_id = getattr(audio_value, "file_id", str(audio_value.size))
+                if st.session_state.get('last_analyze_voice') != audio_id:
+                    try:
+                        recognizer = sr.Recognizer()
+                        with sr.AudioFile(audio_value) as source:
+                            audio_data = recognizer.record(source)
+                            st.session_state.analyze_voice_text = recognizer.recognize_google(audio_data, language=LANG_CODE_MAP[st.session_state.selected_lang]["sr"])
+                    except:
+                        st.session_state.analyze_voice_text = ""
+                    st.session_state.last_analyze_voice = audio_id
+                
+                if st.session_state.get('analyze_voice_text'):
+                    problem_text = st.session_state.analyze_voice_text
+                    st.success(f"**{t('Heard:')}** {problem_text}")
             
             st.write("")
             analyze_trigger = st.button(t("Analyze with AI >"), use_container_width=True)
@@ -790,12 +797,15 @@ def render_main_app():
         
         final_query = user_bot_query if sent_msg else None
         if voice_query is not None:
-            try:
-                recognizer = sr.Recognizer()
-                with sr.AudioFile(voice_query) as source:
-                    audio_data = recognizer.record(source)
-                    final_query = recognizer.recognize_google(audio_data, language=LANG_CODE_MAP[st.session_state.selected_lang]["sr"])
-            except: pass
+            audio_id = getattr(voice_query, "file_id", str(voice_query.size))
+            if st.session_state.get('last_chat_voice') != audio_id:
+                try:
+                    recognizer = sr.Recognizer()
+                    with sr.AudioFile(voice_query) as source:
+                        audio_data = recognizer.record(source)
+                        final_query = recognizer.recognize_google(audio_data, language=LANG_CODE_MAP[st.session_state.selected_lang]["sr"])
+                except: pass
+                st.session_state.last_chat_voice = audio_id
 
         if final_query:
             st.session_state.chat_history.append({"role": "user", "content": final_query})

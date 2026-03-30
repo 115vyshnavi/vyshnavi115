@@ -339,7 +339,7 @@ def render_language_screen():
         <div class="hero-tagline">From Detection → Decision → Profit</div>
         <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 0; margin-top: 10px;">
             <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(10px);">
-                {{logo_img_tag.replace('55px', '80px').replace('display: block;', 'display: inline-block;')}}
+                {logo_img_tag.replace('55px', '80px').replace('display: block;', 'display: inline-block;')}
             </div>
             <h1 class="hero-title" style="margin-bottom: 0;">AgniKshetra</h1>
         </div>

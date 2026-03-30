@@ -641,8 +641,10 @@ def render_main_app():
                         if res_text.startswith("```json"): res_text = res_text[7:-3]
                         elif res_text.startswith("```"): res_text = res_text[3:-3]
                         ai_data = json.loads(res_text.strip())
-                    except Exception:
-                        pass # Fallback
+                    except Exception as e:
+                        st.error(f"Live AI Error: {e}. Falling back to demo data.")
+                else:
+                    st.warning("Gemini API Key missing or model not initialized. Using demo data.")
                 
                 # Save input data to state for tracking
                 st.session_state.active_analysis_data = ai_data

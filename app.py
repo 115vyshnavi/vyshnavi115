@@ -54,6 +54,7 @@ st.markdown(f"""
     
     html, body, [class*="css"], .stApp, p, h1, h2, h3, h4, h5, h6, li, label, input, button {{
         font-family: 'Poppins', sans-serif !important;
+        color: #1e293b;
     }}
     
     /* Global App Background */
@@ -630,7 +631,7 @@ def render_main_app():
                     try:
                         prompt_parts = [
                             f"Crop Type: {crop_type if crop_type else 'AUTO-DETECT FROM IMAGE'}\nSymptoms: {problem_text}\n",
-                            "Analyze the plant. Return strictly valid JSON (no markdown). Do not use 'Unspecified'. Include specific soil and care tips:\n",
+                            "Look at the image. Extremely Important: If the image does NOT prominently feature a plant, crop, or leaf, you must completely ignore the disease analysis and return this exact JSON: {\"auto_crop\": \"Not a plant\", \"detected_disease\": \"None\", \"confidence\": 100, \"best_soil\": \"N/A\", \"care_tips\": \"Please upload a valid plant or crop image.\", \"prescription\": {\"chemical\": {\"name\": \"N/A\", \"dosage\": \"0\", \"application\": \"None\", \"waiting_period\": \"0\", \"cost\": 0, \"loss_if_ignored\": 0, \"expected_saving\": 0, \"consequences\": {\"yield\": \"N/A\", \"soil\": \"N/A\"}}, \"organic\": {\"name\": \"N/A\", \"dosage\": \"0\", \"application\": \"None\", \"waiting_period\": \"0\", \"cost\": 0, \"loss_if_ignored\": 0, \"expected_saving\": 0, \"consequences\": {\"yield\": \"N/A\", \"soil\": \"N/A\"}}}}. If it IS a plant, return strictly valid JSON (no markdown). Do not use 'Unspecified'. Include specific soil and care tips:\n",
                             "{\n  \"auto_crop\": \"Detected crop name\",\n  \"detected_disease\": \"Specific Disease Name\",\n  \"confidence\": 95,\n  \"best_soil\": \"...\",\n  \"care_tips\": \"...\",\n  \"prescription\": {\n    \"chemical\": {\"name\": \"...\", \"dosage\": \"...\", \"application\": \"...\", \"waiting_period\": \"...\", \"cost\": 500, \"loss_if_ignored\": 3000, \"expected_saving\": 2500, \"consequences\": {\"yield\": \"...\", \"soil\": \"...\"}},\n    \"organic\": {\"name\": \"...\", \"dosage\": \"...\", \"application\": \"...\", \"waiting_period\": \"...\", \"cost\": 150, \"loss_if_ignored\": 3000, \"expected_saving\": 2800, \"consequences\": {\"yield\": \"...\", \"soil\": \"...\"}}\n  }\n}"
                         ]
                         if uploaded_files:

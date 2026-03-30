@@ -334,11 +334,16 @@ def render_language_screen():
     
     st.write("")
     st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown("""
-    <div class="hero-text">
+    st.markdown(f"""
+    <div class="hero-text" style="display: flex; flex-direction: column; align-items: center;">
         <div class="hero-tagline">From Detection → Decision → Profit</div>
-        <h1 class="hero-title">AgniKshetra 🌱</h1>
-        <p class="hero-subtitle">AI-Powered Smart Farming Decision Engine</p>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 0; margin-top: 10px;">
+            <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(10px);">
+                {{logo_img_tag.replace('55px', '80px').replace('display: block;', 'display: inline-block;')}}
+            </div>
+            <h1 class="hero-title" style="margin-bottom: 0;">AgniKshetra</h1>
+        </div>
+        <p class="hero-subtitle" style="margin-top: 15px;">AI-Powered Smart Farming Decision Engine</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -355,21 +360,37 @@ def render_language_screen():
             label_visibility="hidden",
             index=list(LANG_CODE_MAP.keys()).index(st.session_state.selected_lang)
         )
-        st.write("")
+        st.markdown("<hr style='border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 15px 0;'>", unsafe_allow_html=True)
+        st.markdown("<style>div[data-testid='stRadio'] > div { background: rgba(255,255,255,0.8); border-radius: 8px; padding: 5px; display: inline-flex; width: 100%; justify-content: center; margin-bottom: 10px;} div[data-testid='stRadio'] label { margin-bottom: 0 !important; border: none !important; padding: 6px 15px !important;}</style>", unsafe_allow_html=True)
+        auth_mode = st.radio("Authentication", ["Log In", "Register"], horizontal=True, label_visibility="collapsed")
+        
         st.markdown("<p style='font-weight: 700; font-size: 13px; color: #4ade80; letter-spacing: 1px; margin-bottom: 0px; text-transform: uppercase;'>ENTER FARM ID / USERNAME</p>", unsafe_allow_html=True)
         farm_input = st.text_input("Farm ID", value="", placeholder="e.g. Raju_Farm_01", label_visibility="collapsed")
         
+        can_proceed = False
         if farm_input.strip():
             exists = any(f.lower() == farm_input.strip().lower() for f in st.session_state.all_farms.keys())
-            if exists:
-                st.markdown(f"<p style='color: #fbbf24; font-size: 12px; font-weight: 600; margin-top: 5px; margin-bottom: 5px;'>⚠️ Farm ID '{farm_input.strip()}' already taken. (Continuing will log you into this account)</p>", unsafe_allow_html=True)
+            if auth_mode == "Log In":
+                if exists:
+                    st.markdown(f"<p style='color: #4ade80; font-size: 13px; font-weight: 600; margin-top: 5px; margin-bottom: 5px;'>✅ Welcome back! Profile found.</p>", unsafe_allow_html=True)
+                    can_proceed = True
+                else:
+                    st.markdown(f"<p style='color: #ef4444; font-size: 13px; font-weight: 600; margin-top: 5px; margin-bottom: 5px;'>❌ Profile '{farm_input.strip()}' not found.</p>", unsafe_allow_html=True)
             else:
-                st.markdown(f"<p style='color: #4ade80; font-size: 12px; font-weight: 600; margin-top: 5px; margin-bottom: 5px;'>✅ Farm ID '{farm_input.strip()}' is available for new registration!</p>", unsafe_allow_html=True)
+                if exists:
+                    st.markdown(f"<p style='color: #ef4444; font-size: 13px; font-weight: 600; margin-top: 5px; margin-bottom: 5px;'>⚠️ Error: '{farm_input.strip()}' is already taken.</p>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<p style='color: #4ade80; font-size: 13px; font-weight: 600; margin-top: 5px; margin-bottom: 5px;'>✅ Available! Ready to register.</p>", unsafe_allow_html=True)
+                    can_proceed = True
         else:
-            st.write("")
+            if auth_mode == "Register":
+                st.markdown(f"<p style='color: #94a3b8; font-size: 12px; font-style: italic; margin-top: 5px; margin-bottom: 5px;'>Leave blank to generate a random Guest ID</p>", unsafe_allow_html=True)
+                can_proceed = True
+            else:
+                st.write("")
             
         st.markdown("""<style>div.stButton > button { background: linear-gradient(135deg, #2E7D32, #1b4332) !important; color: white !important; font-size: 18px !important; box-shadow: 0 0 20px rgba(46,125,50,0.6) !important; }</style>""", unsafe_allow_html=True)
-        if st.button("Start Analysis >", use_container_width=True):
+        if st.button("Secure Login >" if auth_mode == "Log In" else "Create Account >", use_container_width=True, disabled=not can_proceed):
             if farm_input.strip() == "": st.session_state.farm_id = f"Farm_{random.randint(100000, 999999)}"
             else: st.session_state.farm_id = farm_input.strip()
             

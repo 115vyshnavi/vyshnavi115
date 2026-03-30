@@ -322,9 +322,35 @@ def render_language_screen():
     <style>
         [data-testid="stSidebar"] {{display: none !important;}}
         .stApp {{ {bg_css} background-size: cover; background-position: center; background-attachment: fixed; }}
-        div[role="radiogroup"] > label {{ background: rgba(255,255,255,0.95) !important; border: 1px solid #eef2f0 !important; padding: 12px 20px !important; border-radius: 12px !important; margin-bottom: 10px !important; width: 100% !important; transition: 0.2s !important; }}
-        div[role="radiogroup"] > label:hover {{ border-color: #2E7D32 !important; box-shadow: 0 0 15px rgba(46, 125, 50, 0.3) !important; }}
-        div[role="radiogroup"] p {{ color: #1e293b !important; font-weight: 700 !important; font-size: 16px !important;}}
+        /* Sleek Segmented Radio Tabs */
+        div[role="radiogroup"] {{
+            background: rgba(0, 0, 0, 0.4) !important;
+            border-radius: 14px !important;
+            padding: 5px !important;
+            display: flex;
+            gap: 5px;
+        }}
+        div[role="radiogroup"] > label {{
+            background: transparent !important;
+            border: none !important;
+            padding: 10px 15px !important;
+            border-radius: 10px !important;
+            margin: 0 !important;
+            width: 100% !important;
+            transition: 0.3s !important;
+            display: flex;
+            justify-content: center;
+            box-shadow: none !important;
+        }}
+        div[role="radiogroup"] > label:hover {{
+            background: rgba(255, 255, 255, 0.1) !important;
+        }}
+        div[role="radiogroup"] p {{ 
+            color: rgba(255,255,255,0.8) !important; 
+            font-weight: 600 !important; 
+            font-size: 14px !important;
+            margin: 0 !important;
+        }}
         .hero-text {{ text-align: center; color: white; margin-bottom: 40px; }}
         .hero-title {{ font-size: 65px; font-weight: 900; margin-bottom: 0; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }}
         .hero-subtitle {{ font-size: 24px; font-weight: 300; opacity: 0.95; margin-bottom: 10px; }}
@@ -350,21 +376,22 @@ def render_language_screen():
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         st.markdown(f"""
-        <div style="text-align: center; background: rgba(255, 255, 255, 0.15); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 20px;">
-            <p style="font-weight: 700; font-size: 13px; color: #4ade80; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase;">SELECT PREFERRED LANGUAGE</p>
+        <div style="text-align: center; background: rgba(15, 25, 20, 0.65); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: 0 30px 60px rgba(0,0,0,0.6); margin-bottom: 20px;">
+            <p style="font-weight: 700; font-size: 12px; color: #4ade80; letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase;">1. Select Language</p>
         """, unsafe_allow_html=True)
         
         st.session_state.selected_lang = st.radio(
             "Language", 
             list(LANG_CODE_MAP.keys()), 
             label_visibility="hidden",
+            horizontal=True,
             index=list(LANG_CODE_MAP.keys()).index(st.session_state.selected_lang)
         )
-        st.markdown("<hr style='border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 15px 0;'>", unsafe_allow_html=True)
-        st.markdown("<style>div[data-testid='stRadio'] > div { background: rgba(255,255,255,0.8); border-radius: 8px; padding: 5px; display: inline-flex; width: 100%; justify-content: center; margin-bottom: 10px;} div[data-testid='stRadio'] label { margin-bottom: 0 !important; border: none !important; padding: 6px 15px !important;}</style>", unsafe_allow_html=True)
+        
+        st.markdown("<br><p style='font-weight: 700; font-size: 12px; color: #4ade80; letter-spacing: 1.5px; margin-bottom: 10px; margin-top: 10px; text-transform: uppercase;'>2. Authentication Method</p>", unsafe_allow_html=True)
         auth_mode = st.radio("Authentication", ["Log In", "Register"], horizontal=True, label_visibility="collapsed")
         
-        st.markdown("<p style='font-weight: 700; font-size: 13px; color: #4ade80; letter-spacing: 1px; margin-bottom: 0px; text-transform: uppercase;'>ENTER FARM ID / USERNAME</p>", unsafe_allow_html=True)
+        st.markdown("<style>.stTextInput > div > div > input { background: rgba(255,255,255,0.95) !important; border-radius: 12px !important; padding: 12px 15px !important; font-size: 16px !important; font-weight: 600 !important; color: #1e293b !important; text-align: center; border: 2px solid transparent !important; transition: 0.3s !important; } .stTextInput > div > div > input:focus { border-color: #4ade80 !important; box-shadow: 0 0 15px rgba(74, 222, 128, 0.4) !important; }</style><p style='font-weight: 700; font-size: 12px; color: #4ade80; letter-spacing: 1.5px; margin-bottom: 10px; margin-top: 25px; text-transform: uppercase;'>3. Enter Farm ID</p>", unsafe_allow_html=True)
         farm_input = st.text_input("Farm ID", value="", placeholder="e.g. Raju_Farm_01", label_visibility="collapsed")
         
         can_proceed = False

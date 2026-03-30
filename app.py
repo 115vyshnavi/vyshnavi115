@@ -358,7 +358,16 @@ def render_language_screen():
         st.write("")
         st.markdown("<p style='font-weight: 700; font-size: 13px; color: #4ade80; letter-spacing: 1px; margin-bottom: 0px; text-transform: uppercase;'>ENTER FARM ID / USERNAME</p>", unsafe_allow_html=True)
         farm_input = st.text_input("Farm ID", value="", placeholder="e.g. Raju_Farm_01", label_visibility="collapsed")
-        st.write("")
+        
+        if farm_input.strip():
+            exists = any(f.lower() == farm_input.strip().lower() for f in st.session_state.all_farms.keys())
+            if exists:
+                st.markdown(f"<p style='color: #fbbf24; font-size: 12px; font-weight: 600; margin-top: 5px; margin-bottom: 5px;'>⚠️ Farm ID '{farm_input.strip()}' already taken. (Continuing will log you into this account)</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p style='color: #4ade80; font-size: 12px; font-weight: 600; margin-top: 5px; margin-bottom: 5px;'>✅ Farm ID '{farm_input.strip()}' is available for new registration!</p>", unsafe_allow_html=True)
+        else:
+            st.write("")
+            
         st.markdown("""<style>div.stButton > button { background: linear-gradient(135deg, #2E7D32, #1b4332) !important; color: white !important; font-size: 18px !important; box-shadow: 0 0 20px rgba(46,125,50,0.6) !important; }</style>""", unsafe_allow_html=True)
         if st.button("Start Analysis >", use_container_width=True):
             if farm_input.strip() == "": st.session_state.farm_id = f"Farm_{random.randint(100000, 999999)}"
